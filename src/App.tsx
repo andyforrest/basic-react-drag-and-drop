@@ -26,25 +26,31 @@ function App() {
   }
 
   function handleDragDropLeft(event: React.DragEvent) {
-    console.log(event);
-    setRightList(
-      rightList.filter((item) => {
-        return draggedItem !== item;
-      })
-    );
-    setLeftList([...leftList, draggedItem]);
-    setDraggedItem("");
+    //prevent duplicate item check
+    if (!leftList.includes(draggedItem)) {
+      console.log(event);
+      setRightList(
+        rightList.filter((item) => {
+          return draggedItem !== item;
+        })
+      );
+      setLeftList([...leftList, draggedItem]);
+      setDraggedItem("");
+    }
   }
 
   function handleDragDropRight(event: React.DragEvent) {
-    console.log(event);
-    setLeftList(
-      leftList.filter((item) => {
-        return draggedItem !== item;
-      })
-    );
-    setRightList([...rightList, draggedItem]);
-    setDraggedItem("");
+    //prevent duplicate item check
+    if (!rightList.includes(draggedItem)) {
+      console.log(event);
+      setLeftList(
+        leftList.filter((item) => {
+          return draggedItem !== item;
+        })
+      );
+      setRightList([...rightList, draggedItem]);
+      setDraggedItem("");
+    }
   }
   return (
     <>
