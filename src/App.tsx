@@ -7,19 +7,37 @@ function App() {
   const [rightList, setRightList] = useState<string[]>([]);
   const [draggedItem, setDraggedItem] = useState("");
 
-  function handleDragStart(e: React.DragEvent, index: number) {
+  function handleDragStartLeft(event: React.DragEvent, index: number) {
     setDraggedItem(leftList[index]);
     console.log("index: " + index);
-    console.log("event: ", e);
+    console.log("event: ", event);
     console.log(leftList[index]);
   }
 
-  function handleDragOver(e: React.DragEvent) {
-    e.preventDefault();
+  function handleDragStartRight(event: React.DragEvent, index: number) {
+    setDraggedItem(rightList[index]);
+    console.log("index: " + index);
+    console.log("event: ", event);
+    console.log(rightList[index]);
   }
 
-  function handleDragDrop(event: React.DragEvent) {
-    console.log(event)
+  function handleDragOver(event: React.DragEvent) {
+    event.preventDefault();
+  }
+
+  function handleDragDropLeft(event: React.DragEvent) {
+    console.log(event);
+    setRightList(
+      rightList.filter((item) => {
+        return draggedItem !== item;
+      })
+    );
+    setLeftList([...leftList, draggedItem]);
+    setDraggedItem("");
+  }
+
+  function handleDragDropRight(event: React.DragEvent) {
+    console.log(event);
     setLeftList(
       leftList.filter((item) => {
         return draggedItem !== item;
@@ -31,12 +49,16 @@ function App() {
   return (
     <>
       <div className="cards-container">
-        <div className="card">
+        <div
+          className="card"
+          onDragOver={(event) => handleDragOver(event)}
+          onDrop={(event) => handleDragDropLeft(event)}
+        >
           {leftList.map((item, index) => (
             <li
               key={index}
               draggable
-              onDragStart={(event) => handleDragStart(event, index)}
+              onDragStart={(event) => handleDragStartLeft(event, index)}
             >
               {item}
             </li>
@@ -46,10 +68,16 @@ function App() {
         <div
           className="card"
           onDragOver={(event) => handleDragOver(event)}
-          onDrop={(event) => handleDragDrop(event)}
+          onDrop={(event) => handleDragDropRight(event)}
         >
           {rightList.map((item, index) => (
-            <li key={index}>{item}</li>
+            <li
+              key={index}
+              draggable
+              onDragStart={(event) => handleDragStartRight(event, index)}
+            >
+              {item}
+            </li>
           ))}
         </div>
       </div>
@@ -58,4 +86,3 @@ function App() {
 }
 
 export default App;
-
